@@ -7,6 +7,7 @@
 #include <stack>
 #include<list>
 #include<cmath>
+#include<iomanip>
 int NumProb,NumQ;
 class vnode;
 class Qvar;
