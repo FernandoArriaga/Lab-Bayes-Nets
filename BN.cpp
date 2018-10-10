@@ -39,6 +39,7 @@ std::vector<Qvar*> DenHidden;
 
 std::vector<Q*> Queries;
 std::vector<vnode*> variables;
+std::vector<vnode*> parented;
 vnode* findv(std::string name, std::vector<vnode*>where)
 {
     vnode* p=0;
@@ -99,6 +100,7 @@ void initialize1(std::string line)
 
 return;
 }
+
 void initialize2(std::string line)
 {
     bool child=0;
@@ -106,6 +108,7 @@ void initialize2(std::string line)
     int val=1;
     vnode* p;
     vnode* q;
+    vnode* r;
 
     std::string buff;
     p=0;
@@ -141,7 +144,8 @@ for (unsigned int i=0;i<line.size();i++)
         }
         else
         {
-        if(p->Parents.empty())
+        r=findv(p->Name,parented);
+        if(r==0)
         {Qvar* s=new Qvar;
         q=findv(buff,variables);
         s->myvar=q;
@@ -159,7 +163,8 @@ for (unsigned int i=0;i<line.size();i++)
     }
     else if(line[i]==',')
     {
-        if(p->Parents.empty())
+        r=findv(p->Name,parented);
+        if(r==0)
         {Qvar* s=new Qvar;
         q=findv(buff,variables);
         s->myvar=q;
@@ -180,8 +185,10 @@ else
         p->CPT[(id1+1)%2][id2]=1-(atof(buff.c_str()));
 
 }
+parented.push_back(p);
 return;
 }
+
 
 void initializeQ(std::string line)
 {
@@ -282,6 +289,7 @@ void initializeQ(std::string line)
 Queries.push_back(Query);
   return;
 }
+
 int Parentval(Qvar* Child)
 {
     int val=0;
@@ -294,6 +302,7 @@ int Parentval(Qvar* Child)
 void increase(std::vector<Qvar*> NV,unsigned int index)
 {
     if(index<NV.size())
+    {
     NV[index]->myval+=1;
     if(NV[index]->myval>=2)
     {
@@ -301,53 +310,65 @@ void increase(std::vector<Qvar*> NV,unsigned int index)
         if(index+1<NV.size())
         increase(NV,(index+1));
     }
+    }
     return;
 }
 
-void assignparent(std::vector<Qvar*> NV)
+void assignparent(std::vector<Qvar*> NV,std::vector<Qvar*> NV2)
 {
     Qvar* s;
     for(unsigned int j=0;j<NV.size();j++)
     {
-
+        NV[j]->Parents.clear();
         for(unsigned int k=0;k<NV[j]->myvar->Parents.size();k++)
         {
 
-            s=findq(NV[j]->myvar->Parents[k]->myvar->Name,NV);
+            s=findq(NV[j]->myvar->Parents[k]->myvar->Name,NV2);
             if(s!=0)
                 NV[j]->Parents.push_back(s);
         }
     }
+    //std::cout<<"ups";
 }
 
-double calcprob(std::vector<Qvar*> NV,Q* QR)
+double calcprob(std::vector<Qvar*> NV,Q* QR,std::vector<Qvar*> NH)
 {
     double combNum=1;
     double Prob=0;
     int Pval;
-      for(int j=0;j<pow(2,NV.size());j++)
+
+        for(int j=0;j<pow(2,NH.size());j++)
     {
+
         for(unsigned int k=0;k<NV.size();k++)
         {
             if(NV[k]->Parents.empty())
-                combNum*=NV[k]->myvar->Myprobabilities[NV[k]->myval];
+                {combNum*=NV[k]->myvar->Myprobabilities[NV[k]->myval];
+                //std::cout<<NV[k]->myvar->Myprobabilities[NV[k]->myval]<<std::endl;
+                //std::cout<<NV[k]->myvar->Name<<std::endl;
+                }
             else{
                     Pval=Parentval(NV[k]);
                 combNum*=NV[k]->myvar->CPT[NV[k]->myval][Pval];
-
+               // std::cout<<NV[k]->myvar->CPT[NV[k]->myval][Pval]<<std::endl;
+                //std::cout<<NV[k]->myvar->Name<<std::endl;
             }
         }
-        //std::cout<<combNum<<std::endl;
-        Prob+=combNum;
+
+    Prob+=combNum;
+       //std::cout<<Prob<<std::endl;
         combNum=1;
-        increase(QR->NumHidden,0);
+
+        increase(NH,0);
+
     }
+    //std::cout<<Prob<<std::endl;
     return Prob;
 }
 
 int main()
 {
-    double ProbNum=0;
+    double ProbNum=0, ProbDen=0;
     std::string read;
     std::getline(std::cin, read);
         initialize1(read);
@@ -366,7 +387,7 @@ for(int a=0;a<NumProb;a++)
     std::getline(std::cin,read);
     initialize2(read);
 }
-std::cout<<variables[2]->Parents.size();
+
  std::cin>>NumQ;
  std::getline(std::cin,read);
 
@@ -379,9 +400,27 @@ for(int b=0;b<NumQ;b++)
 
 for(unsigned int i=0;i<Queries.size();i++)
 {
-    assignparent(Queries[i]->NumVisible);
-    ProbNum=calcprob(Queries[i]->NumVisible,Queries[i]);
-    //std::cout<<ProbNum<<std::endl;
+    assignparent(Queries[i]->NumVisible,Queries[i]->NumVisible);
+
+    //std::cout<<"Ups1";
+    /*if(!Queries[i]->DenVisible.empty())
+    {
+    if(Queries[i]->DenVisible.size()>2)
+    std::cout<<Queries[i]->DenVisible[2]->Parents.size();
+
+    }*/
+    ProbNum=calcprob(Queries[i]->NumVisible,Queries[i],Queries[i]->NumHidden);
+    //std::cout<<"DEN";
+    assignparent(Queries[i]->DenVisible,Queries[i]->DenVisible);
+    ProbDen=calcprob(Queries[i]->DenVisible,Queries[i],Queries[i]->DenHidden);
+
+    std::cout<<(ProbNum/ProbDen)<<std::endl;
 }
 //std::cout<<variables[0]->CPT[0][0]<<Queries[4]->NumVisible[2]->myval;
 }
+
+/*
+for (int i=0;i<variables.size();i++)
+std::cout<<variables[i].Name<<std::endl;
+2^((variables.size())-1)
+*/
