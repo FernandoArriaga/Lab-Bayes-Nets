@@ -413,8 +413,8 @@ for(unsigned int i=0;i<Queries.size();i++)
     //std::cout<<"DEN";
     assignparent(Queries[i]->DenVisible,Queries[i]->DenVisible);
     ProbDen=calcprob(Queries[i]->DenVisible,Queries[i],Queries[i]->DenHidden);
-
-    std::cout<<(ProbNum/ProbDen)<<std::endl;
+    std::cout<<"\n";
+    std::cout<<(ProbNum/ProbDen);//<<std::endl;
 }
 //std::cout<<variables[0]->CPT[0][0]<<Queries[4]->NumVisible[2]->myval;
 }
