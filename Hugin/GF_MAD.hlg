@@ -1,0 +1,92 @@
+Tue Oct 16 08:43:12 2018
+
+
+Moral links:
+
+    Marrying Call_Other_Woman_Pretty and Buy_GF_Chocolates
+    Marrying Call_GF_Fat and Call_Other_Woman_Pretty
+
+
+Triangulating prime component with 3 members:
+    Say_Sorry, Call_GF_Fat, Girlfriend_Mad
+This component is a clique of cost 8
+
+Triangulating prime component with 5 members:
+    Angry_with_GF, Buy_GF_Chocolates, Call_Other_Woman_Pretty, Call_GF_Fat,
+    Girlfriend_Mad
+This component is a clique of cost 32
+
+
+Total cost of triangulation for all prime components is 40
+
+
+Elimination sequence:
+
+    Call_Other_Woman_Pretty
+    Buy_GF_Chocolates
+    Angry_with_GF
+    Say_Sorry
+    Girlfriend_Mad
+    Call_GF_Fat
+
+
+Cliques:
+
+Clique 2, 3 members, table size = 8:
+    Call_GF_Fat, Girlfriend_Mad, Say_Sorry
+
+Clique 1, 5 members, table size = 32:
+    Call_GF_Fat, Girlfriend_Mad, Angry_with_GF, Buy_GF_Chocolates,
+    Call_Other_Woman_Pretty
+
+Total clique table size: 40
+
+
+The junction forest:
+
+Creating junction tree with clique 2 as root ...
+
+Cliques 1 and 2 linked, separator has 2 members and table size = 4:
+    Call_GF_Fat, Girlfriend_Mad
+
+
+Assignment of potentials to cliques:
+
+    Node Angry_with_GF assigned to clique 1
+    Node Say_Sorry assigned to clique 2
+    Node Buy_GF_Chocolates assigned to clique 1
+    Node Call_Other_Woman_Pretty assigned to clique 1
+    Node Call_GF_Fat assigned to clique 1
+    Node Girlfriend_Mad assigned to clique 1
+
+
+Checking conditional probability potentials:
+
+    No errors found
+
+
+Beliefs for chance nodes:
+
+    Angry_with_GF:
+	+Angry     0.4
+	-NotAngry  0.6
+
+    Say_Sorry:
+	+Sorry     0.498327
+	-Sorry     0.501673
+
+    Buy_GF_Chocolates:
+	+ Chocolates 0.25
+	- Chocolates 0.75
+
+    Call_Other_Woman_Pretty:
+	+ Pretty woman 0.57
+	- Pretty woman 0.43
+
+    Call_GF_Fat:
+	+SheFat    0.174
+	-NotFat    0.826
+
+    Girlfriend_Mad:
+	+SheMad    0.576725
+	-NotMad    0.423275

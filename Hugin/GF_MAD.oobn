@@ -1,0 +1,190 @@
+class GF_MAD
+{
+    inputs = ();
+    outputs = ();
+    node_size = (80 40);
+    HR_DBN_Num_Slices = "5";
+    HR_Desc = "";
+    HR_OOBN_CheckConsistency = "1";
+    HR_OOBN_FitExpand = "1";
+    HR_Zoom_ZoomFactor = "100";
+    HR_Groups_GroupColors = "";
+    HR_Groups_GroupNames = "";
+    HR_Groups_UserGroupsNo = "0";
+    HR_Utility_Link = "63";
+    HR_Probabilistic_Link = "63";
+    HR_Functional_Link = "63";
+    HR_Binding_Link = "63";
+    HR_Information_Arc = "63";
+    HR_Color_Interface = "21";
+    HR_Color_Instance = "0";
+    HR_Color_DiscreteFunction = "5";
+    HR_Color_Function = "4";
+    HR_Color_Utility = "36";
+    HR_Color_Decision = "17";
+    HR_Color_ContinuousChance = "48";
+    HR_Color_DiscreteChance = "16";
+    HR_Monitor_InitSD = "2";
+    HR_Monitor_Utility_Arrange = "0";
+    HR_Monitor_Mean_Variance = "1";
+    HR_Monitor_Chance_Utility = "1";
+    HR_Monitor_InitStates = "5";
+    HR_Monitor_OpenGraph = "0";
+    HR_Monitor_GraphPrecision = "100";
+    HR_Monitor_AutoUpdGraph = "0";
+    HR_Compile_MaxMinimalSeparators = "100000";
+    HR_Compile_ApproxEpsilon = "1.0E-5";
+    HR_Compile_Approximate = "0";
+    HR_Compile_SaveToMemory = "0";
+    HR_Compile_Compress = "0";
+    HR_Compile_TriangMethod = "0";
+    HR_Propagate_AutoNormal = "1";
+    HR_Propagate_AutoSum = "1";
+    HR_Propagate_Auto = "1";
+    HR_Font_Italic = "0";
+    HR_Font_Weight = "400";
+    HR_Font_Size = "-12";
+    HR_Font_Name = "javax.swing.plaf.FontUIResource[family=Dialog,name=Dialog,style=bold,size=12]";
+    HR_Grid_GridShow = "0";
+    HR_Grid_GridSnap = "0";
+    HR_Grid_Y = "40";
+    HR_Grid_X = "40";
+
+    node Angry_with_GF
+    {
+	label = "";
+	position = (668 33);
+	states = ("+Angry" "-NotAngry");
+	HR_LinkGroup = "[Call_GF_Fat:0][Call_Other_Woman_Pretty:0][Girlfriend_Mad:0][Buy_GF_Chocolates:0]";
+	HR_LinkMode = "[Call_GF_Fat:0][Call_Other_Woman_Pretty:0][Girlfriend_Mad:0][Buy_GF_Chocolates:0]";
+	HR_Group = "0";
+	HR_Desc = "";
+	HR_State_1 = "";
+	HR_State_0 = "";
+	HR_NodeSize = "(138, 65)";
+    }
+
+    node Say_Sorry
+    {
+	label = "";
+	position = (365 364);
+	states = ("+Sorry" "-Sorry");
+	HR_LinkGroup = "";
+	HR_LinkMode = "";
+	HR_Group = "0";
+	HR_Desc = "";
+	HR_State_1 = "";
+	HR_State_0 = "";
+	HR_NodeSize = "(177, 79)";
+    }
+
+    node Buy_GF_Chocolates
+    {
+	label = "";
+	position = (445 123);
+	states = ("+ Chocolates" "- Chocolates");
+	HR_LinkGroup = "[Call_GF_Fat:0][Girlfriend_Mad:0]";
+	HR_LinkMode = "[Call_GF_Fat:0][Girlfriend_Mad:0]";
+	HR_NodeSize = "(141, 79)";
+	HR_Group = "0";
+	HR_Desc = "";
+	HR_State_1 = "";
+	HR_State_0 = "";
+    }
+
+    node Call_Other_Woman_Pretty
+    {
+	label = "";
+	position = (670 225);
+	states = ("+ Pretty woman" "- Pretty woman");
+	HR_LinkControlPoints = "";
+	HR_LinkGroup = "[Girlfriend_Mad:0]";
+	HR_LinkMode = "[Girlfriend_Mad:0][C1:0]";
+	HR_NodeSize = "(193, 88)";
+	HR_Group = "0";
+	HR_Desc = "";
+	HR_State_1 = "";
+	HR_State_0 = "";
+    }
+
+    node Call_GF_Fat
+    {
+	label = "";
+	position = (126 121);
+	states = ("+SheFat" "-NotFat");
+	HR_LinkGroup = "[Girlfriend_Mad:0][Say_Sorry:0]";
+	HR_LinkMode = "[Girlfriend_Mad:0][C1:0]";
+	HR_NodeSize = "(161, 63)";
+	HR_Group = "0";
+	HR_Desc = "";
+	HR_State_1 = "";
+	HR_State_0 = "";
+    }
+
+    node Girlfriend_Mad
+    {
+	label = "";
+	position = (444 229);
+	states = ("+SheMad" "-NotMad");
+	HR_LinkGroup = "[Say_Sorry:0]";
+	HR_LinkMode = "[C1:0]";
+	HR_NodeSize = "(125, 59)";
+	HR_Group = "0";
+	HR_Desc = "";
+	HR_State_1 = "";
+	HR_State_0 = "";
+    }
+
+    potential (Angry_with_GF)
+    {
+	data = ( 0.4 0.6 );
+    }
+
+    potential (Say_Sorry | Girlfriend_Mad Call_GF_Fat)
+    {
+	data = ((( 1 0 )	%  Girlfriend_Mad=+SheMad  Call_GF_Fat=+SheFat
+		 ( 0.8 0.2 ))	%  Girlfriend_Mad=+SheMad  Call_GF_Fat=-NotFat
+		(( 0.35 0.65 )	%  Girlfriend_Mad=-NotMad  Call_GF_Fat=+SheFat
+		 ( 0 1 )));	%  Girlfriend_Mad=-NotMad  Call_GF_Fat=-NotFat
+    }
+
+    potential (Buy_GF_Chocolates | Angry_with_GF)
+    {
+	data = (( 0.1 0.9 )	%  Angry_with_GF=+Angry
+		( 0.35 0.65 ));	%  Angry_with_GF=-NotAngry
+    }
+
+    potential (Call_Other_Woman_Pretty | Angry_with_GF)
+    {
+	data = (( 0.75 0.25 )	%  Angry_with_GF=+Angry
+		( 0.45 0.55 ));	%  Angry_with_GF=-NotAngry
+    }
+
+    potential (Call_GF_Fat | Angry_with_GF Buy_GF_Chocolates)
+    {
+	data = ((( 0.6 0.4 )	%  Angry_with_GF=+Angry  Buy_GF_Chocolates=+ Chocolates
+		 ( 0.3 0.7 ))	%  Angry_with_GF=+Angry  Buy_GF_Chocolates=- Chocolates
+		(( 0.2 0.8 )	%  Angry_with_GF=-NotAngry  Buy_GF_Chocolates=+ Chocolates
+		 ( 0 1 )));	%  Angry_with_GF=-NotAngry  Buy_GF_Chocolates=- Chocolates
+    }
+
+    potential (Girlfriend_Mad | Angry_with_GF Buy_GF_Chocolates Call_GF_Fat Call_Other_Woman_Pretty)
+    {
+	data = ((((( 0.97 0.03 )	%  Angry_with_GF=+Angry  Buy_GF_Chocolates=+ Chocolates  Call_GF_Fat=+SheFat  Call_Other_Woman_Pretty=+ Pretty woman
+		   ( 0.85 0.15 ))	%  Angry_with_GF=+Angry  Buy_GF_Chocolates=+ Chocolates  Call_GF_Fat=+SheFat  Call_Other_Woman_Pretty=- Pretty woman
+		  (( 0.7 0.3 )	%  Angry_with_GF=+Angry  Buy_GF_Chocolates=+ Chocolates  Call_GF_Fat=-NotFat  Call_Other_Woman_Pretty=+ Pretty woman
+		   ( 0.2 0.8 )))	%  Angry_with_GF=+Angry  Buy_GF_Chocolates=+ Chocolates  Call_GF_Fat=-NotFat  Call_Other_Woman_Pretty=- Pretty woman
+		 ((( 1 0 )	%  Angry_with_GF=+Angry  Buy_GF_Chocolates=- Chocolates  Call_GF_Fat=+SheFat  Call_Other_Woman_Pretty=+ Pretty woman
+		   ( 0.85 0.15 ))	%  Angry_with_GF=+Angry  Buy_GF_Chocolates=- Chocolates  Call_GF_Fat=+SheFat  Call_Other_Woman_Pretty=- Pretty woman
+		  (( 0.8 0.2 )	%  Angry_with_GF=+Angry  Buy_GF_Chocolates=- Chocolates  Call_GF_Fat=-NotFat  Call_Other_Woman_Pretty=+ Pretty woman
+		   ( 0.45 0.55 ))))	%  Angry_with_GF=+Angry  Buy_GF_Chocolates=- Chocolates  Call_GF_Fat=-NotFat  Call_Other_Woman_Pretty=- Pretty woman
+		(((( 0.9 0.1 )	%  Angry_with_GF=-NotAngry  Buy_GF_Chocolates=+ Chocolates  Call_GF_Fat=+SheFat  Call_Other_Woman_Pretty=+ Pretty woman
+		   ( 0.7 0.3 ))	%  Angry_with_GF=-NotAngry  Buy_GF_Chocolates=+ Chocolates  Call_GF_Fat=+SheFat  Call_Other_Woman_Pretty=- Pretty woman
+		  (( 0.65 0.35 )	%  Angry_with_GF=-NotAngry  Buy_GF_Chocolates=+ Chocolates  Call_GF_Fat=-NotFat  Call_Other_Woman_Pretty=+ Pretty woman
+		   ( 0.05 0.95 )))	%  Angry_with_GF=-NotAngry  Buy_GF_Chocolates=+ Chocolates  Call_GF_Fat=-NotFat  Call_Other_Woman_Pretty=- Pretty woman
+		 ((( 0.99 0.01 )	%  Angry_with_GF=-NotAngry  Buy_GF_Chocolates=- Chocolates  Call_GF_Fat=+SheFat  Call_Other_Woman_Pretty=+ Pretty woman
+		   ( 0.8 0.2 ))	%  Angry_with_GF=-NotAngry  Buy_GF_Chocolates=- Chocolates  Call_GF_Fat=+SheFat  Call_Other_Woman_Pretty=- Pretty woman
+		  (( 0.75 0.25 )	%  Angry_with_GF=-NotAngry  Buy_GF_Chocolates=- Chocolates  Call_GF_Fat=-NotFat  Call_Other_Woman_Pretty=+ Pretty woman
+		   ( 0.2 0.8 )))));	%  Angry_with_GF=-NotAngry  Buy_GF_Chocolates=- Chocolates  Call_GF_Fat=-NotFat  Call_Other_Woman_Pretty=- Pretty woman
+    }
+} % class GF_MAD
